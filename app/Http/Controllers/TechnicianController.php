@@ -51,6 +51,7 @@ class TechnicianController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -96,8 +97,9 @@ class TechnicianController extends Controller
             $user = User::with('technician')->find($user->id);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Usuario registrado exitosamente.',
-                'user' => $user,
+                'data' => $user,
             ], 201);
 
         } catch (\Exception $e) {
@@ -105,6 +107,7 @@ class TechnicianController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al registrar el usuario.'
             ], 500);
@@ -118,13 +121,15 @@ class TechnicianController extends Controller
 
         if (!$technician) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el técnico.'
             ], 404);
         }
 
         return response()->json([
+            'success' => true,
             'message' => 'Técnico obtenido exitosamente.',
-            'technician' => $technician
+            'data' => $technician
         ]);
     }
 
@@ -142,6 +147,7 @@ class TechnicianController extends Controller
 
         if (!$technician) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el técnico.'
             ], 404);
         }
@@ -170,6 +176,7 @@ class TechnicianController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -203,7 +210,7 @@ class TechnicianController extends Controller
                 $originalFileName = $file->getClientOriginalName();
                 $fileName = time() . '_' . pathinfo($originalFileName, PATHINFO_FILENAME);
                 $fileName = Str::slug($fileName) . '.' . $file->getClientOriginalExtension();
-                $path = '/img/customers/';
+                $path = '/img/technicians/';
                 $file->move(public_path($path), $fileName);
                 $technician->update(['photo' => $path . $fileName]);
             }
@@ -214,8 +221,9 @@ class TechnicianController extends Controller
             $user = User::with('technician')->find($user->id);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Técnico actualizado exitosamente.',
-                'user' => $user,
+                'data' => $user,
             ], 200);
 
         } catch (\Exception $e) {
@@ -223,6 +231,7 @@ class TechnicianController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al actualizar el técnico.'
             ], 500);
@@ -237,6 +246,7 @@ class TechnicianController extends Controller
 
         if (!$technician) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el Técnico.'
             ], 404);
         }
@@ -261,8 +271,9 @@ class TechnicianController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Cliente eliminado exitosamente.',
-                'technician' => $technician,
+                'success' => true,
+                'message' => 'Técnico eliminado exitosamente.',
+                'data' => $technician,
             ], 200);
 
         } catch (\Exception $e) {
@@ -270,6 +281,7 @@ class TechnicianController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al eliminar el técnico.'
             ], 500);

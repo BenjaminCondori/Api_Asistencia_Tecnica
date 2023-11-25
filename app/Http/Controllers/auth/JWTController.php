@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JWTController extends Controller
@@ -18,21 +19,44 @@ class JWTController extends Controller
     // Inicio de sesión del usuario
     public function login(Request $request)
     {
+        // Validación de datos del formulario
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string',
+            'type' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()
+            ], 400);
+        }
+
         // JWTAuth and attempt
         $token = JWTAuth::attempt([
-            'email' => $request->email,
-            'password' => $request->password,
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'type' => $request->input('type'),
         ]);
 
         if (!empty($token)) {
-            // Respuesta
             $usuario = Auth::user();
 
-            $usuario = User::with('rol', 'empleado')->find($usuario->id);
+            switch ($usuario->type) {
+                case 'cliente':
+                    $usuario = User::with('customer')->find($usuario->id);
+                    break;
+                case 'taller':
+                    $usuario = User::with('workshop')->find($usuario->id);
+                    break;
+                case 'tecnico':
+                    $usuario = User::with('technician')->find($usuario->id);
+                    break;
+            }
 
             return response()->json([
                 'status' => true,
-                'message' => 'Inicio sesión exitoso',
+                'message' => 'Usuario autenticado con éxito.',
                 'token' => $token,
                 'usuario' => $usuario,
             ], 200);
@@ -40,7 +64,7 @@ class JWTController extends Controller
 
         return response()->json([
             'status' => false,
-            'error' => 'Inicio de sesión fallido'
+            'error' => 'Las credenciales ingresadas son incorrectas.'
         ], 401);
     }
 
@@ -52,14 +76,25 @@ class JWTController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Cierre de sesión exitoso'
+            'message' => 'La sesión se ha cerrado con éxito.'
         ]);
     }
 
     public function profile()
     {
         $usuario = auth()->user();
-        $empleado = $usuario->empleado;
+
+        switch ($usuario->type) {
+            case 'cliente':
+                $usuario = User::with('customer')->find($usuario->id);
+                break;
+            case 'taller':
+                $usuario = User::with('workshop')->find($usuario->id);
+                break;
+            case 'tecnico':
+                $usuario = User::with('technician')->find($usuario->id);
+                break;
+        }
 
         return response()->json([
             'status' => true,

@@ -51,6 +51,7 @@ class WorkshopController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -94,8 +95,9 @@ class WorkshopController extends Controller
             $user = User::with('workshop')->find($user->id);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Usuario registrado exitosamente.',
-                'user' => $user,
+                'data' => $user,
             ], 201);
 
         } catch (\Exception $e) {
@@ -103,6 +105,7 @@ class WorkshopController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al registrar el usuario.'
             ], 500);
@@ -116,13 +119,15 @@ class WorkshopController extends Controller
 
         if (!$workshop) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el taller.'
             ], 404);
         }
 
         return response()->json([
+            'success' => true,
             'message' => 'Taller obtenido exitosamente.',
-            'workshop' => $workshop,
+            'data' => $workshop,
         ], 200);
     }
 
@@ -140,6 +145,7 @@ class WorkshopController extends Controller
 
         if (!$workshop) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el taller.'
             ], 404);
         }
@@ -168,6 +174,7 @@ class WorkshopController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -212,8 +219,9 @@ class WorkshopController extends Controller
             $user = User::with('workshop')->find($user->id);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Taller actualizado exitosamente.',
-                'user' => $user,
+                'data' => $user,
             ], 200);
 
         } catch (\Exception $e) {
@@ -221,6 +229,7 @@ class WorkshopController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al actualizar el taller.'
             ], 500);
@@ -235,6 +244,7 @@ class WorkshopController extends Controller
 
         if (!$workshop) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el taller.'
             ], 404);
         }
@@ -259,8 +269,9 @@ class WorkshopController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Taller eliminado exitosamente.',
-                'workshop' => $workshop,
+                'data' => $workshop,
             ], 200);
 
         } catch (\Exception $e) {
@@ -268,6 +279,7 @@ class WorkshopController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al eliminar el taller.'
             ], 500);

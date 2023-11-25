@@ -50,6 +50,7 @@ class CustomerController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -92,8 +93,9 @@ class CustomerController extends Controller
             $user = User::with('customer')->find($user->id);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Usuario registrado exitosamente.',
-                'user' => $user,
+                'data' => $user,
             ], 201);
 
         } catch (\Exception $e) {
@@ -101,6 +103,7 @@ class CustomerController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al registrar el usuario.'
             ], 500);
@@ -114,13 +117,15 @@ class CustomerController extends Controller
 
         if (!$customer) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el cliente.'
             ], 404);
         }
 
         return response()->json([
+            'success' => true,
             'message' => 'Cliente obtenido exitosamente.',
-            'customer' => $customer
+            'data' => $customer
         ]);
     }
 
@@ -137,6 +142,7 @@ class CustomerController extends Controller
 
         if (!$customer) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el cliente.'
             ], 404);
         }
@@ -164,6 +170,7 @@ class CustomerController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -207,8 +214,9 @@ class CustomerController extends Controller
             $user = User::with('customer')->find($user->id);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Cliente actualizado exitosamente.',
-                'user' => $user,
+                'data' => $user,
             ], 200);
 
         } catch (\Exception $e) {
@@ -216,6 +224,7 @@ class CustomerController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al actualizar el cliente.'
             ], 500);
@@ -230,6 +239,7 @@ class CustomerController extends Controller
 
         if (!$customer) {
             return response()->json([
+                'success' => false,
                 'message' => 'No se encontró el Cliente.'
             ], 404);
         }
@@ -254,8 +264,9 @@ class CustomerController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Cliente eliminado exitosamente.',
-                'customer' => $customer,
+                'data' => $customer,
             ], 200);
 
         } catch (\Exception $e) {
@@ -263,6 +274,7 @@ class CustomerController extends Controller
             DB::rollBack();
 
             return response()->json([
+                'success' => false,
                 'error' => $e->getMessage(),
                 'message' => 'Ocurrió un error al eliminar el cliente.'
             ], 500);
