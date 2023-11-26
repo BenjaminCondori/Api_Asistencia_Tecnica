@@ -42,26 +42,33 @@ class JWTController extends Controller
 
         if (!empty($token)) {
             $usuario = Auth::user();
+            $email = $usuario->email;
+            $type = $usuario->type;
 
             switch ($usuario->type) {
                 case 'cliente':
-                    $usuario = User::with('customer')->find($usuario->id);
+                    // $usuario = User::with('customer')->find($usuario->id);
+                    $usuario = $usuario->customer;
                     break;
                 case 'taller':
-                    $usuario = User::with('workshop')->find($usuario->id);
+                    // $usuario = User::with('workshop')->find($usuario->id);
+                    $usuario = $usuario->workshop;
                     break;
                 case 'tecnico':
-                    $usuario = User::with('technician')->find($usuario->id);
+                    // $usuario = User::with('technician')->find($usuario->id);
+                    $usuario = $usuario->technician;
                     break;
             }
+
+            $user = $usuario->toArray();
+            $user['email'] = $email;
+            $user['type'] = $type;
+            $user['sessionToken'] = $token;
 
             return response()->json([
                 'success' => true,
                 'message' => 'Usuario autenticado con éxito.',
-                'data' => [
-                    'token' => $token,
-                    'user' => $usuario,
-                ],
+                'data' => $user,
             ], 200);
         }
 
