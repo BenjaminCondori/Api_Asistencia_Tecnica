@@ -17,63 +17,13 @@ class JWTController extends Controller
     }
 
     // Inicio de sesión del usuario
-    // public function login(Request $request)
-    // {
-    //     // Validación de datos del formulario
-    //     $validator = Validator::make($request->all(), [
-    //         'email' => 'required|email',
-    //         'password' => 'required|string',
-    //         // 'type' => 'required|string',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'error' => $validator->errors()
-    //         ], 400);
-    //     }
-
-    //     // JWTAuth and attempt
-    //     $token = JWTAuth::attempt([
-    //         'email' => $request->input('email'),
-    //         'password' => $request->input('password'),
-    //         'type' => $request->input('type'),
-    //     ]);
-
-    //     if (!empty($token)) {
-    //         $usuario = Auth::user();
-
-    //         switch ($usuario->type) {
-    //             case 'cliente':
-    //                 $usuario = User::with('customer')->find($usuario->id);
-    //                 break;
-    //             case 'taller':
-    //                 $usuario = User::with('workshop')->find($usuario->id);
-    //                 break;
-    //             case 'tecnico':
-    //                 $usuario = User::with('technician')->find($usuario->id);
-    //                 break;
-    //         }
-
-    //         return response()->json([
-    //             'status' => true,
-    //             'message' => 'Usuario autenticado con éxito.',
-    //             'token' => $token,
-    //             'data' => $usuario,
-    //         ], 200);
-    //     }
-
-    //     return response()->json([
-    //         'status' => false,
-    //         'error' => 'Las credenciales ingresadas son incorrectas.'
-    //     ], 401);
-    // }
-
     public function login(Request $request)
     {
         // Validación de datos del formulario
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
+            'type' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -86,32 +36,29 @@ class JWTController extends Controller
         $token = JWTAuth::attempt([
             'email' => $request->input('email'),
             'password' => $request->input('password'),
+            'type' => $request->input('type'),
         ]);
 
         if (!empty($token)) {
             $usuario = Auth::user();
-            $email = $usuario->email;
 
-            // Obtengo todos los usuarios asociados al email ingresado
-            $users = User::where('email', $email)->with('customer', 'workshop', 'technician')->get();
-
-            // switch ($usuario->type) {
-            //     case 'cliente':
-            //         $usuario = User::with('customer')->find($usuario->id);
-            //         break;
-            //     case 'taller':
-            //         $usuario = User::with('workshop')->find($usuario->id);
-            //         break;
-            //     case 'tecnico':
-            //         $usuario = User::with('technician')->find($usuario->id);
-            //         break;
-            // }
+            switch ($usuario->type) {
+                case 'cliente':
+                    $usuario = User::with('customer')->find($usuario->id);
+                    break;
+                case 'taller':
+                    $usuario = User::with('workshop')->find($usuario->id);
+                    break;
+                case 'tecnico':
+                    $usuario = User::with('technician')->find($usuario->id);
+                    break;
+            }
 
             return response()->json([
                 'status' => true,
                 'message' => 'Usuario autenticado con éxito.',
                 'token' => $token,
-                'data' => $users,
+                'data' => $usuario,
             ], 200);
         }
 
@@ -120,6 +67,47 @@ class JWTController extends Controller
             'error' => 'Las credenciales ingresadas son incorrectas.'
         ], 401);
     }
+
+    // public function login(Request $request)
+    // {
+    //     // Validación de datos del formulario
+    //     $validator = Validator::make($request->all(), [
+    //         'email' => 'required|email',
+    //         'password' => 'required|string',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'error' => $validator->errors()
+    //         ], 400);
+    //     }
+
+    //     // JWTAuth and attempt
+    //     $token = JWTAuth::attempt([
+    //         'email' => $request->input('email'),
+    //         'password' => $request->input('password'),
+    //     ]);
+
+    //     if (!empty($token)) {
+    //         $usuario = Auth::user();
+    //         $email = $usuario->email;
+
+    //         // Obtengo todos los usuarios asociados al email ingresado
+    //         $users = User::where('email', $email)->with('customer', 'workshop', 'technician')->get();
+
+    //         return response()->json([
+    //             'status' => true,
+    //             'message' => 'Usuario autenticado con éxito.',
+    //             'token' => $token,
+    //             'data' => $users,
+    //         ], 200);
+    //     }
+
+    //     return response()->json([
+    //         'status' => false,
+    //         'error' => 'Las credenciales ingresadas son incorrectas.'
+    //     ], 401);
+    // }
 
 
     // Cierre de sesión del usuario
