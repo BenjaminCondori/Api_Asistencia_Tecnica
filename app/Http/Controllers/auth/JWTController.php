@@ -28,6 +28,7 @@ class JWTController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'error' => $validator->errors()
             ], 400);
         }
@@ -55,15 +56,17 @@ class JWTController extends Controller
             }
 
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'message' => 'Usuario autenticado con éxito.',
-                'token' => $token,
-                'data' => $usuario,
+                'data' => [
+                    'token' => $token,
+                    'user' => $usuario,
+                ],
             ], 200);
         }
 
         return response()->json([
-            'status' => false,
+            'success' => false,
             'error' => 'Las credenciales ingresadas son incorrectas.'
         ], 401);
     }
