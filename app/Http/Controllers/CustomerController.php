@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -59,16 +60,15 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $image = null;
+            $urlImage = null;
 
             if ($request->hasFile("photo")) {
                 $file = $request->file("photo");
                 $originalFileName = $file->getClientOriginalName();
                 $fileName = time() . '_' . pathinfo($originalFileName, PATHINFO_FILENAME); // Elimina la extensión
                 $fileName = Str::slug($fileName). '.' . $file->getClientOriginalExtension();
-                $path = '/img/customers/';
-                $file->move(public_path($path), $fileName);
-                $image = $path . $fileName;
+                $pathImage = $file->storeAs('public/img/customers', $fileName);
+                $urlImage = Storage::url($pathImage);
             }
 
             // Crear el cliente asociado al usuario
@@ -76,7 +76,7 @@ class CustomerController extends Controller
                 'name' => $request->input('name'),
                 'surname' => $request->input('surname'),
                 'phone' => $request->input('phone'),
-                'photo' => $image
+                'photo' => $urlImage
             ]);
 
             // Crear el usuario
@@ -195,17 +195,18 @@ class CustomerController extends Controller
             if ($request->hasFile("photo")) {
                 $filePath = public_path($customer->photo);
 
-                if (!is_null($customer->photo) && file_exists($filePath)) {
-                    unlink($filePath);
+                $filePath = str_replace('storage', 'public', $filePath);
+                if (!is_null($customer->photo)) {
+                    Storage::delete($filePath);
                 }
 
                 $file = $request->file("photo");
                 $originalFileName = $file->getClientOriginalName();
                 $fileName = time() . '_' . pathinfo($originalFileName, PATHINFO_FILENAME);
                 $fileName = Str::slug($fileName) . '.' . $file->getClientOriginalExtension();
-                $path = '/img/customers/';
-                $file->move(public_path($path), $fileName);
-                $customer->update(['photo' => $path . $fileName]);
+                $pathImage = $file->storeAs('public/img/customers', $fileName);
+                $urlImage = Storage::url($pathImage);
+                $customer->update(['photo' => $urlImage]);
             }
 
             // Todo salió bien, realizar la confirmación de la transacción

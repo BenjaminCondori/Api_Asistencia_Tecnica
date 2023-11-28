@@ -47,15 +47,12 @@ class JWTController extends Controller
 
             switch ($usuario->type) {
                 case 'cliente':
-                    // $usuario = User::with('customer')->find($usuario->id);
                     $usuario = $usuario->customer;
                     break;
                 case 'taller':
-                    // $usuario = User::with('workshop')->find($usuario->id);
                     $usuario = $usuario->workshop;
                     break;
                 case 'tecnico':
-                    // $usuario = User::with('technician')->find($usuario->id);
                     $usuario = $usuario->technician;
                     break;
             }

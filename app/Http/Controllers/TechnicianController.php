@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -60,16 +61,15 @@ class TechnicianController extends Controller
         DB::beginTransaction();
 
         try {
-            $image = null;
+            $urlImage = null;
 
             if ($request->hasFile("photo")) {
                 $file = $request->file("photo");
                 $originalFileName = $file->getClientOriginalName();
                 $fileName = time() . '_' . pathinfo($originalFileName, PATHINFO_FILENAME); // Elimina la extensión
                 $fileName = Str::slug($fileName). '.' . $file->getClientOriginalExtension();
-                $path = '/img/technicians/';
-                $file->move(public_path($path), $fileName);
-                $image = $path . $fileName;
+                $pathImage = $file->storeAs('public/img/technicians', $fileName);
+                $urlImage = Storage::url($pathImage);
             }
 
             // Crear el técnico asociado al usuario
@@ -80,7 +80,7 @@ class TechnicianController extends Controller
                 'phone' => $request->input('phone'),
                 'workshop_id' => $request->input('workshop_id'),
                 'status' => 'Disponible', // Por defecto
-                'photo' => $image,
+                'photo' => $urlImage,
             ]);
 
             // Crear el usuario
@@ -210,9 +210,9 @@ class TechnicianController extends Controller
                 $originalFileName = $file->getClientOriginalName();
                 $fileName = time() . '_' . pathinfo($originalFileName, PATHINFO_FILENAME);
                 $fileName = Str::slug($fileName) . '.' . $file->getClientOriginalExtension();
-                $path = '/img/technicians/';
-                $file->move(public_path($path), $fileName);
-                $technician->update(['photo' => $path . $fileName]);
+                $pathImage = $file->storeAs('public/img/technicians', $fileName);
+                $urlImage = Storage::url($pathImage);
+                $technician->update(['photo' => $urlImage]);
             }
 
             // Todo salió bien, realizar la confirmación de la transacción
