@@ -30,7 +30,7 @@ Route::post("login", [JWTController::class, "login"]);
 
     Route::get('customer/show/{id}', [CustomerController::class, 'show']);
     Route::post('customer/create', [CustomerController::class, 'store']);
-    Route::put('customer/update/{id}', [CustomerController::class, 'update']);
+    Route::post('customer/update/{id}', [CustomerController::class, 'update']);
     Route::delete('customer/delete/{id}', [CustomerController::class, 'destroy']);
 
     Route::get('workshop/show/{id}', [WorkshopController::class, 'show']);
