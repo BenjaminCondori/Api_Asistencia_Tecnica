@@ -117,7 +117,7 @@ class TechnicianController extends Controller
 
     public function show(string $id)
     {
-        $technician = Technician::with('users')->find($id);
+        $technician = Technician::find($id);
 
         if (!$technician) {
             return response()->json([
@@ -125,6 +125,11 @@ class TechnicianController extends Controller
                 'message' => 'No se encontró el técnico.'
             ], 404);
         }
+
+        $user = User::where('technician_id', $technician->id)->first();
+        $technician = $technician->toArray();
+        $technician['email'] = $user->email;
+        $technician['type'] = $user->type;
 
         return response()->json([
             'success' => true,

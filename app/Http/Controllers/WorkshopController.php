@@ -115,7 +115,7 @@ class WorkshopController extends Controller
 
     public function show(string $id)
     {
-        $workshop = Workshop::with('users')->find($id);
+        $workshop = Workshop::find($id);
 
         if (!$workshop) {
             return response()->json([
@@ -123,6 +123,11 @@ class WorkshopController extends Controller
                 'message' => 'No se encontró el taller.'
             ], 404);
         }
+
+        $user = User::where('workshop_id', $workshop->id)->first();
+        $workshop = $workshop->toArray();
+        $workshop['email'] = $user->email;
+        $workshop['type'] = $user->type;
 
         return response()->json([
             'success' => true,
