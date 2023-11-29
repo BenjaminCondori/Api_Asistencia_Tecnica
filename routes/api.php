@@ -3,6 +3,7 @@
 use App\Http\Controllers\auth\JWTController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TechnicianController;
+use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\WorkshopController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +44,12 @@ Route::post("login", [JWTController::class, "login"]);
     Route::post('technician/create', [TechnicianController::class, 'store']);
     Route::put('technician/update/{id}', [TechnicianController::class, 'update']);
     Route::delete('technician/delete/{id}', [TechnicianController::class, 'destroy']);
+
+    Route::get('vehicle', [VehicleController::class, 'index']);
+    Route::get('vehicle/{id}', [VehicleController::class, 'getVehicles']);
+    Route::get('vehicle/show/{id}', [VehicleController::class, 'show']);
+    Route::post('vehicle/create', [VehicleController::class, 'store']);
+    Route::put('vehicle/update/{id}', [VehicleController::class, 'update']);
+    Route::delete('vehicle/delete/{id}', [VehicleController::class, 'destroy']);
 
 // });
