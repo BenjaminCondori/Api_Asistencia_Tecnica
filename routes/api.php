@@ -28,6 +28,7 @@ Route::post("login", [JWTController::class, "login"]);
     Route::get("refresh", [ApiController::class, "refreshToken"]);
     Route::get("logout", [ApiController::class, "logout"]);
 
+    Route::get('customer', [CustomerController::class, 'index']);
     Route::get('customer/show/{id}', [CustomerController::class, 'show']);
     Route::post('customer/create', [CustomerController::class, 'store']);
     Route::post('customer/update/{id}', [CustomerController::class, 'update']);

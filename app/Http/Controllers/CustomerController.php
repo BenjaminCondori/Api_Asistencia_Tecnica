@@ -113,7 +113,7 @@ class CustomerController extends Controller
 
     public function show(string $id)
     {
-        $customer = Customer::with('users')->find($id);
+        $customer = Customer::find($id);
 
         if (!$customer) {
             return response()->json([
@@ -122,10 +122,15 @@ class CustomerController extends Controller
             ], 404);
         }
 
+        $user = User::where('customer_id', $customer->id)->first();
+        $customer = $customer->toArray();
+        $customer['email'] = $user->email;
+        $customer['type'] = $user->type;
+
         return response()->json([
             'success' => true,
             'message' => 'Cliente obtenido exitosamente.',
-            'data' => $customer
+            'data' => $customer,
         ]);
     }
 
