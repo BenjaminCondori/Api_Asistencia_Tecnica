@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Technician;
 use App\Models\User;
 use App\Models\Workshop;
 use Illuminate\Http\Request;
@@ -16,7 +17,13 @@ class WorkshopController extends Controller
 {
     public function index()
     {
-        //
+        $workshops = Workshop::all();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Talleres obtenidos exitosamente.',
+            'data' => $workshops,
+        ], 200);
     }
 
 
@@ -24,6 +31,25 @@ class WorkshopController extends Controller
     {
         //
     }
+    
+    
+    public function getTechnicians(string $id)
+    {
+        $workshop = Workshop::find($id);
+        if (!$workshop) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El taller no existe.'
+            ], 404);
+        }
+
+        $technicians = Technician::where('workshop_id', $id)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $technicians
+        ], 200);
+    }
+    
 
     public function store(Request $request)
     {

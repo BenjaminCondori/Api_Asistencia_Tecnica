@@ -36,11 +36,14 @@ Route::post("login", [JWTController::class, "login"]);
     Route::post('customer/update/{id}', [CustomerController::class, 'update']);
     Route::delete('customer/delete/{id}', [CustomerController::class, 'destroy']);
 
+    ROute::get('workshop', [WorkshopController::class, 'index']);
     Route::get('workshop/show/{id}', [WorkshopController::class, 'show']);
     Route::post('workshop/create', [WorkshopController::class, 'store']);
     Route::post('workshop/update/{id}', [WorkshopController::class, 'update']);
     Route::delete('workshop/delete/{id}', [WorkshopController::class, 'destroy']);
 
+    Route::get('technician', [TechnicianController::class, 'index']);
+    Route::get('technician/{id}', [TechnicianController::class, 'getTechnicians']);
     Route::get('technician/show/{id}', [TechnicianController::class, 'show']);
     Route::post('technician/create', [TechnicianController::class, 'store']);
     Route::post('technician/update/{id}', [TechnicianController::class, 'update']);
