@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssistanceRequestController;
 use App\Http\Controllers\auth\JWTController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TechnicianController;
@@ -37,19 +38,24 @@ Route::post("login", [JWTController::class, "login"]);
 
     Route::get('workshop/show/{id}', [WorkshopController::class, 'show']);
     Route::post('workshop/create', [WorkshopController::class, 'store']);
-    Route::put('workshop/update/{id}', [WorkshopController::class, 'update']);
+    Route::post('workshop/update/{id}', [WorkshopController::class, 'update']);
     Route::delete('workshop/delete/{id}', [WorkshopController::class, 'destroy']);
 
     Route::get('technician/show/{id}', [TechnicianController::class, 'show']);
     Route::post('technician/create', [TechnicianController::class, 'store']);
-    Route::put('technician/update/{id}', [TechnicianController::class, 'update']);
+    Route::post('technician/update/{id}', [TechnicianController::class, 'update']);
     Route::delete('technician/delete/{id}', [TechnicianController::class, 'destroy']);
 
     Route::get('vehicle', [VehicleController::class, 'index']);
     Route::get('vehicle/{id}', [VehicleController::class, 'getVehicles']);
     Route::get('vehicle/show/{id}', [VehicleController::class, 'show']);
     Route::post('vehicle/create', [VehicleController::class, 'store']);
-    Route::put('vehicle/update/{id}', [VehicleController::class, 'update']);
+    Route::post('vehicle/update/{id}', [VehicleController::class, 'update']);
     Route::delete('vehicle/delete/{id}', [VehicleController::class, 'destroy']);
+
+    Route::get('assistance-request', [AssistanceRequestController::class, 'index']);
+    Route::get('assistance-request/{id}', [AssistanceRequestController::class, 'getAssistanceRequests']);
+    Route::get('assistance-request/show/{id}', [AssistanceRequestController::class, 'show']);
+    Route::post('assistance-request/create', [AssistanceRequestController::class, 'store']);
 
 // });

@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('problem_description');
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('voice_note');
-            $table->string('photo');
-            $table->float('total_price');
+            $table->string('voice_note')->nullable();
+            $table->string('photo')->nullable();
+            $table->float('total_price')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('vehicle_id');
             $table->unsignedBigInteger('technician_id')->nullable();

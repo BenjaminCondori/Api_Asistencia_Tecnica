@@ -25,6 +25,23 @@ class TechnicianController extends Controller
         //
     }
 
+    public function getTechnicians(string $id)
+    {
+        $technician = Technician::find($id);
+        if (!$technician) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El taller no existe.'
+            ], 404);
+        }
+
+        $technicians = Technician::where('workshop_id', $id)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $technicians
+        ], 200);
+    }
+
 
     public function store(Request $request)
     {

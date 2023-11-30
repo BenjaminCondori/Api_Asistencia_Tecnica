@@ -51,7 +51,7 @@ class VehicleController extends Controller
             'license_plate' => 'required|string|unique:vehicles,license_plate',
             'color' => 'required|string',
             'year' => 'required|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:10240',
             'customer_id' => 'required',
         ]);
 
@@ -154,7 +154,7 @@ class VehicleController extends Controller
             ],
             'color' => 'required|string',
             'year' => 'required|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:10240',
             'customer_id' => 'required',
         ]);
 
