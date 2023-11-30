@@ -54,6 +54,7 @@ Route::post("login", [JWTController::class, "login"]);
     Route::delete('vehicle/delete/{id}', [VehicleController::class, 'destroy']);
 
     Route::get('assistance-request', [AssistanceRequestController::class, 'index']);
+    Route::get('assistance-request/getPending', [AssistanceRequestController::class, 'getPendingAssistanceRequests']);
     Route::get('assistance-request/{id}', [AssistanceRequestController::class, 'getAssistanceRequests']);
     Route::get('assistance-request/show/{id}', [AssistanceRequestController::class, 'show']);
     Route::post('assistance-request/create', [AssistanceRequestController::class, 'store']);

@@ -13,13 +13,26 @@ class AssistanceRequestController extends Controller
 {
     public function index()
     {
-        //
+        $assistanceRequests = AssistanceRequest::all();
+        return response()->json($assistanceRequests);
     }
 
 
     public function create()
     {
         //
+    }
+
+    public function getPendingAssistanceRequests() {
+        $requests = AssistanceRequest::where('status', 'Pendiente')
+        ->whereNull('technician_id')
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Solicitudes de asistencia pendientes.',
+            'data' => $requests
+        ], 200);
     }
 
     public function getAssistanceRequests(string $id)
