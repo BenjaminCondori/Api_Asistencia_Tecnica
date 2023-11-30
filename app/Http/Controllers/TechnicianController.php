@@ -36,6 +36,13 @@ class TechnicianController extends Controller
         }
 
         $technicians = Technician::where('workshop_id', $id)->get();
+        
+        foreach ($technicians as &$tech) {
+            $user = User::where('technician_id', $tech['id'])->first();
+            $tech['email'] = $user->email;
+            $tech['type'] = $user->type;
+        }
+        
         return response()->json([
             'success' => true,
             'data' => $technicians
